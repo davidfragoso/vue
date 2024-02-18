@@ -2,11 +2,11 @@ import type { InterInfo } from "@/interfaces/InterInfo";
 
 const InfoData:InterInfo[] = [
     {
-        id:1,
-        name:'Gael',
-        lastname:'López',
-        age:21,
-        gender:'M'
+        id:6,
+        name:'Kira',
+        lastname:'Cariño',
+        age:19,
+        gender:'F'
     },
 ]
 

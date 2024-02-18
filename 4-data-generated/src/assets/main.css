@@ -107,7 +107,6 @@ header:hover nav a.router-link-exact-active {
   #app {
     display: grid;   
     padding: 0 2rem;
-    max-width: 800px; /* Ajusta el ancho máximo según tus necesidades */
     width: 100%;
     margin: 0 auto;
   }

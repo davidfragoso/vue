@@ -78,4 +78,4 @@ const vistaActual05 = true;
 const vistaActual06 = true;
 
 </script>
-<style scoped></style>
+<style scoped></style>@/data/card1@/data/card2@/data/card2@/data/card2@/data/card2@/data/card2

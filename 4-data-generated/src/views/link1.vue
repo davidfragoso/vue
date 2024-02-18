@@ -9,60 +9,59 @@
     <body>
       <div>
         <ul>
-          <DataItem v-bind="datos" v-for="(datos, index) in selectedData" :key="index" />
+          <DataItem v-bind="datos" v-for="(datos, index) in selectedData" :key="index" :image="datos.image" />
         </ul>
       </div>
     </body>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed } from 'vue';  // Asegúrate de importar 'ref' y 'computed'
-import { RouterLink, useRoute } from 'vue-router';
-import DataItem from '@/components/datos/DataItem.vue';
-import DataInfo01 from '@/data/DataInfo01';
-import DataInfo02 from '@/data/DataInfo02';
-import DataInfo03 from '@/data/DataInfo03';
-import DataInfo04 from '@/data/DataInfo04';
-import DataInfo05 from '@/data/DataInfo05';
-import DataInfo06 from '@/data/DataInfo06';
+  <script setup lang="ts">
+  import { ref, computed } from 'vue'; 
+  import { RouterLink, useRoute } from 'vue-router';
+  import DataItem from '@/components/datos/DataItem.vue';
+  import card1 from '@/data/card1';
+  import card2 from '@/data/card2';
+  import card3 from '@/data/card3';
+  import card4 from '@/data/card4';
+  import card5 from '@/data/card5';
+  import card6 from '@/data/card6';
 
-const route = useRoute();
-const pageTitles = {
-  vista1: 'Link 1',
-  vista2: 'Link 2',
-  vista3: 'Link 3',
-  vista4: 'Link 4',
-  vista5: 'Link 5',
-  vista6: 'Link 6',
-};
+  const route = useRoute();
+  const pageTitles = {
+    vista1: 'Link 1',
+    vista2: 'Link 2',
+    vista3: 'Link 3',
+    vista4: 'Link 4',
+    vista5: 'Link 5',
+    vista6: 'Link 6',
+  };
 
-const selectedData = ref(getDataForRoute(route.name));
+  const pageTitle = computed(() => pageTitles[route.name]); // Define pageTitle here
 
-function getDataForRoute(routeName) {
+  const selectedData = ref(getDataForRoute(route.name));
+
+  function getDataForRoute(routeName) {
+  const baseUrl = import.meta.env.BASE_URL;
+
   switch (routeName) {
     case 'vista1':
-      return DataInfo01;
+      return card1.map(item => ({ ...item, image: `${baseUrl}src/images/fotos/yo.jpg` }));
     case 'vista2':
-      return DataInfo02;
+      return card2.map(item => ({ ...item, image: `${baseUrl}src/images/fotos/joven.jpg` }));
     case 'vista3':
-      return DataInfo03;
+      return card3.map(item => ({ ...item, image: `${baseUrl}src/images/fotos/mason.png` }));
     case 'vista4':
-      return DataInfo04;
+      return card4.map(item => ({ ...item, image: `${baseUrl}src/images/fotos/mujer1.jpg` }));
     case 'vista5':
-      return DataInfo05;
+      return card5.map(item => ({ ...item, image: `${baseUrl}src/images/fotos/mujer2.jpg` }));
     case 'vista6':
-      return DataInfo06;
+      return card6.map(item => ({ ...item, image: `${baseUrl}src/images/fotos/kira.png` }));
     default:
       return [];
   }
 }
-
-const pageTitle = computed(() => pageTitles[route.name]);
 </script>
-
-
-
 
 <style scoped>
 body {
