@@ -3,6 +3,7 @@
     <div class="card">
       <div class="fotoContainer">
         <div v-if="visual == true" class="cortina">
+          <img src="../../images/ut-logo.png" style="width: 145px" alt="Foto" />
           <img :src="props.image" class="foto" alt="Foto" />
         </div>
         <button @click="toggleVisibility" class="btnFoto">{{ visual ? 'Hide' : 'Show' }}</button>
