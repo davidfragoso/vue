@@ -1,6 +1,6 @@
-import type { InterInfo } from "@/interfaces/InterInfo";
+import type { Card } from "@/interfaces/Card";
 
-const InfoData:InterInfo[] = [
+const card:Card[] = [
     {
         id:4,
         name:'Nelly',
@@ -10,4 +10,4 @@ const InfoData:InterInfo[] = [
     },
 ]
 
-export default InfoData
+export default card

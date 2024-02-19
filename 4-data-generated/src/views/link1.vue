@@ -1,11 +1,5 @@
 <template>
   <div>
-    <header>
-      <nav>
-        <RouterLink to="/">Inicio</RouterLink>
-      </nav>
-      <h1>{{ pageTitle }}</h1>
-    </header>
     <body>
       <div>
         <ul>
@@ -37,7 +31,7 @@
     vista6: 'Link 6',
   };
 
-  const pageTitle = computed(() => pageTitles[route.name]); // Define pageTitle here
+  const pageTitle = computed(() => pageTitles[route.name]); 
 
   const selectedData = ref(getDataForRoute(route.name));
 

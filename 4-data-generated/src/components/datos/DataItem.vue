@@ -1,38 +1,37 @@
-<template>
-  <div class="card-container">
-    <div class="card">
-      <div class="fotoContainer">
-        <div v-if="visual == true" class="cortina">
-          <img src="../../images/ut-logo.png" style="width: 145px" alt="Foto" />
-          <img :src="props.image" class="foto" alt="Foto" />
+  <template>
+    <div class="card-container">
+      <div class="card">
+        <div class="fotoContainer">
+          <div v-if="visual == true" class="cortina">
+            <img src="../../images/ut-logo.png" style="width: 145px" alt="Foto" />
+            <img :src="props.image" class="foto" alt="Foto" />
+          </div>
+          <button @click="toggleVisibility" class="btnFoto">{{ visual ? 'Hide' : 'Show' }}</button>
         </div>
-        <button @click="toggleVisibility" class="btnFoto">{{ visual ? 'Hide' : 'Show' }}</button>
-      </div>
-      <div class="card-content">
-        <span>
-          <h1>{{ props.name }} {{ props.lastname }}</h1>
-          <h2>Card: {{ props.id }}</h2>
-        </span>
-        <span>
-          <h3>Edad: {{ props.age }}</h3>
-          <h3>Genero: {{ props.gender }}</h3>
-        </span>
+        <div class="card-content">
+          <span>
+            <h1>{{ props.name }} {{ props.lastname }}</h1>
+          </span>
+          <span>
+            <h3>Edad: {{ props.age }}</h3>
+            <h3>Genero: {{ props.gender }}</h3>
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-</template>
+  </template>
 
-<script setup lang="ts">
-import type { InterInfo } from '@/interfaces/InterInfo'
-import { ref } from 'vue';
+  <script setup lang="ts">
+  import type { Card } from '@/interfaces/Card'
+  import { ref } from 'vue';
 
-const props = defineProps<InterInfo & { image: string }>();
-const visual = ref(true);
+  const props = defineProps<Card & { image: string }>();
+  const visual = ref(true);
 
-const toggleVisibility = () => {
-  visual.value = !visual.value;
-};
-</script>
+  const toggleVisibility = () => {
+    visual.value = !visual.value;
+  };
+  </script>
 
 
 
@@ -41,17 +40,17 @@ const toggleVisibility = () => {
 
 h1 {
   font-weight: 500;
-  color: #e74c3c; /* Rojo */
+  color: #e74c3c; 
 }
 
 h2 {
   font-weight: 400;
-  color: #2ecc71; /* Verde */
+  color: #2ecc71; 
 }
 
 h3 {
   font-weight: 300;
-  color: #3498db; /* Azul */
+  color: #3498db; 
 }
 
 .card-container {
@@ -62,50 +61,52 @@ h3 {
 
 .card {
   display: flex;
-  width: 50rem; /* Ajusta el ancho según sea necesario */
+  width: 50rem;
   height: 22rem;
   font-family: 'Quicksand', sans-serif;
-  color: #f39c12; /* Amarillo */
-  background-color: #3d2c50; /* Gris azulado */
+  color: #f39c12;
+  background-color: #fdfdfdd6;
   border-radius: 22px;
   padding: 2rem;
   margin: 10px;
   position: relative;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+
 }
 
 .card-content {
-  width: 60%; /* Ajusta el ancho de la primera columna según sea necesario */
+  width: 60%;
 }
 
 .fotoContainer {
-  width: 40%; /* Ajusta el ancho de la segunda columna según sea necesario */
-  height: 100%; /* Añade un alto explícito al contenedor de la imagen */
+  width: 40%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  border-right: 2px solid #657484; /* Línea vertical divisoria entre columnas */
+  border-right: 2px solid #48b4b2db;
 
 }
 
 .foto {
   width: 11rem;
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.5), 0 17px 50px 0 rgba(0, 0, 0, 0.4);
-  border: 2px solid transparent; /* Inicialmente, el borde es transparente */
+  border: 2px solid transparent;
   border-radius: 50%;
-  transition: border 0.5s ease-in-out; /* Efecto de transición en el borde */
+  transition: border 0.5s ease-in-out; 
 }
 
 .fotoContainer:hover .foto {
-  border: 3px solid #3fcfa1; /* Al pasar el ratón, el borde se hace visible */
+  border: 3px solid #3fcfa1;
 }
 
 .btnFoto {
   cursor: pointer;
   font-family: 'Quicksand', sans-serif;
-  color: #fff; /* Blanco */
-  background-color: #e74c3c; /* Rojo */
-  border: 2px solid #fff; /* Blanco */
+  color: #fff; 
+  background-color: #e74c3c; 
+  border: 2px solid #fff; 
   width: 11rem;
   height: 2.5rem;
   border-radius: 4px;
@@ -113,23 +114,23 @@ h3 {
   display: inline-block;
   font-size: 16px;
   position: absolute;
-  bottom: 0; /* Para que el botón quede en la parte inferior */
-  left: 50%; /* Centra el botón horizontalmente */
-  transform: translateX(-50%); /* Centra el botón horizontalmente */
-  opacity: 1; /* Inicialmente, el botón es completamente visible */
-  transition: opacity 0.5s ease-in-out; /* Efecto de transición en la opacidad */
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .btnFoto:hover {
-  opacity: 0.7; /* Al pasar el ratón, la opacidad disminuye */
+  opacity: 0.7;
 }
 
 .cortina {
-  --border: 1px solid #e74c3c; /* Rojo */
+  --border: 1px solid #e74c3c; 
 }
 
-.cortina img {
-  animation: breath 3s infinite alternate; /* Animación de tipo breath */
+.cortina img, .card {
+  animation: breath 3s infinite alternate; /* Animación breath */
 }
 
 @keyframes breath {
@@ -141,3 +142,4 @@ h3 {
   }
 }
 </style>
+@/interfaces/Card

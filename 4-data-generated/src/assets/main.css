@@ -4,7 +4,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* height: 80vh; */
   margin: 0;
 }
 
@@ -36,17 +35,27 @@ a,
 header {
   text-align: center;
   line-height: 1.5;
-  background-color: #4285f4; /* Color moderno */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #4285f4;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
   padding: 20px;
+  margin-bottom: 1rem;
   border-radius: 0 0 100% 100%;
   transition: background-color 0.3s;
 }
 
 header:hover {
-  background-color: #800080; /* Color violeta al pasar el cursor */
+  background-color: #800080;
+}
+header:hover nav a.router-link-exact-active {
+  background-color: #c22cc2; 
 }
 
+header:hover nav a {
+  background-color: #ab3eab; 
+}
+header:hover nav a:hover {
+  background-color: #c22cc2; 
+}
 .logo {
   display: block;
   margin: 0 auto 2rem;
@@ -64,37 +73,32 @@ nav {
 nav a {
   display: inline-block;
   padding: 0.5rem 1rem;
-  border-left: 1px solid #4285f4; /* Color moderno */
+  border-left: 2px solid #ffffffa4;
   text-align: center;
-  color: #fff; /* Texto blanco */
+  color: #fff;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 1px; /* Espaciado entre letras */
-  background-color: #4285f4; /* Color moderno por defecto */
+  letter-spacing: 1px; 
+  background-color: #4285f4;
   border-radius: 4px;
-  margin: 2px; /* Espaciado entre enlaces */
-  transition: background-color 0.3s, transform 0.2s ease-in-out; /* Agrega transición para suavizar el cambio */
+  margin: 2px; 
+  transition: background-color 0.3s, transform 0.2s ease-in-out; 
 
-  /* Estilos específicos para cada enlace */
   &:nth-child(odd) {
-    transform: translateY(5px); /* Desplazamiento hacia abajo para enlaces impares */
+    transform: translateY(5px);
   }
 
   &:nth-child(even) {
-    transform: translateY(-5px); /* Desplazamiento hacia arriba para enlaces pares */
+    transform: translateY(-5px); 
   }
 
   &:hover,
   &.router-link-exact-active {
-    background-color: #004080; /* Color al pasar el cursor o activo */
+    background-color: #004080; 
     transform: translateY(-5px);
   }
 }
-
-header:hover nav a.router-link-exact-active {
-  background-color: #800080; /* Color violeta al pasar el cursor sobre el encabezado */
-}
-
+  
 @media (min-width: 1024px) {
   body {
     display: flex;
