@@ -35,8 +35,6 @@ const submitForm = () => {
     const user = {
       name: formData.value.name,
       lastName: formData.value.lastName,
-      age: formData.value.age,
-      gender: formData.value.gender === 'otro' ? customGender.value : formData.value.gender,
       email: formData.value.email,
       password: formData.value.password,
     };

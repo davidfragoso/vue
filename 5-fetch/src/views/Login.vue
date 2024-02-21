@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, defineProps } from 'vue'
+import { ref, onMounted, computed, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const { emit } = defineProps(['emit'])
@@ -7,60 +7,31 @@ const { emit } = defineProps(['emit'])
 const users = ref([])
 const loggedIn = ref(false)
 const editingUser = ref(null)
-
-const saveEditedUser = () => {
-  const index = users.value.findIndex((user) => user.id === editingUser.value.id)
-  users.value.splice(index, 1, editingUser.value)
-  localStorage.setItem('users', JSON.stringify(users.value))
-  editingUser.value = null
-}
-
-const cancelEdit = () => {
-  editingUser.value = null
-}
-
-const editUser = (user) => {
-  editingUser.value = { ...user }
-}
-
-const deleteUser = (userId) => {
-  users.value = users.value.filter((user) => user.id !== userId)
-  localStorage.setItem('users', JSON.stringify(users.value))
-}
-
-const handleLoginSuccess = (userData) => {
-  const existingUser = users.value.find((user) => user.id === userData.id)
-
-  if (!existingUser) {
-    users.value.push(userData)
-    localStorage.setItem('users', JSON.stringify(users.value))
-  }
-
-  loggedIn.value = true
-  emit('loginSuccess', userData)
-}
-
-const logout = () => {
-  loggedIn.value = false
-}
+const formSubmitted = ref(false)
 
 const route = useRoute()
 const router = useRouter()
-
-onMounted(() => {
-  if (route.meta.requiresAuth && !loggedIn.value) {
-    router.push({ name: 'login' })
-  } else {
-    loadUsers()
-  }
-})
 
 const formData = ref({
   email: '',
   password: ''
 })
 
-const formSubmitted = ref(false)
+const storedUsers = computed(() => JSON.parse(localStorage.getItem('users')) || [])
+
+const matchingUser = computed(() => {
+  return storedUsers.value.find((user) =>
+    user.email.trim().toLowerCase() === formData.value.email.trim().toLowerCase() &&
+    user.password.trim() === formData.value.password.trim()
+  )
+})
+
+const alertShown = ref(false)
+
+const hasValidationErrors = computed(() => {
+  return Object.keys(validationRules).some((fieldName) => validateField(fieldName) !== '')
+})
+
 const validationRules = {
   email: (value) =>
     formSubmitted.value && (value.trim() === '' || !isValidEmail(value))
@@ -72,9 +43,16 @@ const validationRules = {
 
 const validateField = (fieldName) => validationRules[fieldName](formData.value[fieldName])
 
+onMounted(() => {
+  if (route.meta.requiresAuth && !loggedIn.value) {
+    router.push({ name: 'login' })
+  } else {
+    loadUsers()
+  }
+})
+
 const loadUsers = () => {
-  const storedUsers = JSON.parse(localStorage.getItem('users')) || []
-  users.value = [...storedUsers]
+  users.value = storedUsers.value
 }
 
 const isEmailAlreadyRegistered = (email) => {
@@ -84,56 +62,85 @@ const isEmailAlreadyRegistered = (email) => {
   return !!existingUser
 }
 
-const hasValidationErrors = () => {
-  return Object.keys(validationRules).some((fieldName) => validateField(fieldName) !== '')
-}
 const submitForm = () => {
-  formSubmitted.value = true;
+  formSubmitted.value = true
 
-  if (!hasValidationErrors()) {
-    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-    const matchingUser = storedUsers.find(
-      (user) =>
-        user.email.trim().toLowerCase() === formData.value.email.trim().toLowerCase() &&
-        user.password.trim() === formData.value.password.trim()
-    );
-
-    if (matchingUser) {
-      console.log('Inicio de sesión exitoso:', matchingUser);
-      handleLoginSuccess(matchingUser);
+  if (!hasValidationErrors.value) {
+    if (matchingUser.value) {
+      console.log('Inicio de sesión exitoso:', matchingUser.value)
+      handleLoginSuccess(matchingUser.value)
       setTimeout(() => {
-        formSubmitted.value = false;
-      }, 3000);
+        formSubmitted.value = false
+      }, 3000)
     } else {
+      if (!alertShown.value) {
+        alert('Error de credenciales.')
+        alertShown.value = true
+      }
+
       if (isEmailAlreadyRegistered(formData.value.email)) {
-        console.error('Registro fallido. El correo electrónico ya está registrado.');
+        console.error('Registro fallido. El correo electrónico ya está registrado.')
       } else {
         const newUser = {
           id: Date.now(),
           name: '',
           lastName: '',
           email: formData.value.email.trim(),
-          password: formData.value.password.trim(),
-        };
+          password: formData.value.password.trim()
+        }
 
-        storedUsers.push(newUser);
-        localStorage.setItem('users', JSON.stringify(storedUsers));
+        storedUsers.value.push(newUser)
+        localStorage.setItem('users', JSON.stringify(storedUsers.value))
 
-        console.log('Registro exitoso:', newUser);
-        handleLoginSuccess(newUser);
+        console.log('Registro exitoso:', newUser)
+        handleLoginSuccess(newUser)
       }
     }
   } else {
-    console.error('Datos del formulario no válidos.');
+    console.error('Datos del formulario no válidos.')
   }
-};
+}
 
+const handleLoginSuccess = (userData) => {
+  const existingUser = users.value.find((user) => user.email === userData.email)
+
+  if (existingUser) {
+    loggedIn.value = true
+    emit('loginSuccess', userData)
+
+    formData.value.email = ''
+    formData.value.password = ''
+  } else {
+    console.error('Inicio de sesión fallido. Usuario no encontrado.')
+  }
+}
+
+const logout = () => {
+  loggedIn.value = false
+}
+
+const editUser = (user) => {
+  editingUser.value = user
+}
+
+const saveEditedUser = () => {
+  localStorage.setItem('users', JSON.stringify(users.value))
+  editingUser.value = null
+}
+
+const cancelEdit = () => {
+  editingUser.value = null
+}
+
+const deleteUser = (userId) => {
+  users.value = users.value.filter((user) => user.id !== userId)
+  localStorage.setItem('users', JSON.stringify(users.value))
+}
 
 const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
 </script>
 
 <template>
@@ -166,23 +173,24 @@ const isValidEmail = (email) => {
       </div>
     </div>
     <div v-else>
-      <h2 v-if="formSubmitted && !loggedIn" class="error">
-        Acceso denegado. Correo o contraseña incorrectos.
-      </h2>
       <form @submit.prevent="submitForm" class="form">
         <img alt="Vue logo" class="logo" src="@/assets/ut-logo.png" height="80" />
 
         <h1>Iniciar Sesión</h1>
         <div v-for="field in ['email', 'password']" :key="field" class="form-group">
           <label :for="field">{{ field === 'email' ? 'Correo Electrónico' : 'Contraseña' }}:</label>
-          <input v-model="formData[field]" :type="field === 'password' ? 'password' : 'text'" class="form-input" />
+          <input
+            v-model="formData[field]"
+            :type="field === 'password' ? 'password' : 'text'"
+            class="form-input"
+          />
           <span v-if="formSubmitted" class="error">{{ validateField(field) }}</span>
         </div>
         <div class="register-link">
           <p>¿No tienes una cuenta? <router-link to="/">Regístrate</router-link></p>
         </div>
-        
-        <hr>
+
+        <hr />
         <button type="submit" class="submit-button">Iniciar Sesión</button>
       </form>
     </div>
@@ -207,7 +215,7 @@ const isValidEmail = (email) => {
 hr {
   margin: 20px;
 }
-p{
+p {
   color: #4d4d4d;
 }
 .container {
