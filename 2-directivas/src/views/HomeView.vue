@@ -2,7 +2,7 @@
 import {ref} from 'vue';
 import type {Ref} from 'vue';
 
-const name:Ref<string> = ref ('Ricardo Anaya');
+const name:Ref<string> = ref ('David Fragoso');
 const age:Ref<number> = ref (21);
 const errors = ref([{
   name: '',
